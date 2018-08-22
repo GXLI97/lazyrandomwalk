@@ -3,4 +3,8 @@
 /vectors
 /omerlevy-hyperwords-688addd64ca2
 /report
+*.ipynb
+/.ipyndb_checkpoints
+/.vscode
+/notebook
 
