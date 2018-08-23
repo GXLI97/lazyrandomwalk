@@ -34,5 +34,3 @@ rm enwiki-latest-pages-articles.xml
 ```
 
 Run on text8 example.
-
-
