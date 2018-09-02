@@ -9,5 +9,4 @@
 
 
 module load anaconda3
-pwd
 src/lazy.sh
