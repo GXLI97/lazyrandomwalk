@@ -7,43 +7,38 @@ import pickle
 import logging
 import argparse
 
-# python3 src/svd.py --dataset text8 --dim 50 --num_words 3446 --weights 0.7 0.2 0.1
-# python3 src/svd.py --dataset wikipedia --dim 500 --num_words 10000 --weights 0.7 0.2 0.1
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', type=str)
+parser.add_argument('--vocab_file', type=str)
+parser.add_argument('--matrix_file', type=str)
+parser.add_argument('--vectors_file', type=str)
 parser.add_argument('--dim', type=int)
 parser.add_argument('--num_words', type=int)
-parser.add_argument('--weights', type=float, nargs="+")
+parser.add_argument('--alpha', type=float)
 args = parser.parse_args()
 
-
-DATASET = args.dataset
-COMAT_FILE = "data/{}.comat.npz".format(DATASET)
-ID2WORD_FILE = 'data/{}.id2word.p'.format(DATASET)
-
+VOCAB_FILE = args.vocab_file
+MATRIX_FILE = args.matrix_file
+VECTORS_FILE = args.vectors_file
 DIM = args.dim
 NUM_WORDS = args.num_words
-# XMAX = 1e10
+ALPHA = args.alpha
 
-WEIGHTS = args.weights
-name = ','.join(map(str, WEIGHTS))
-print(WEIGHTS)
-VECTEXT_FILE = 'vectors/{}{}.vectors.txt'.format(DATASET, name)
+logging.basicConfig(level=logging.INFO)
 
-logging.basicConfig(format='%(asctime)s : %(threadName)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-# def truncate(counts):
-#     counts.data[counts.data > XMAX] = XMAX
-#     return counts
+def truncate(X, xmax):
+    '''if values in X are above xmax, set them to xmax.'''
+    X.data[X.data > xmax] = xmax
+    return X
 
-def calc_pmi(counts):
+
+def calculate_pmi(X):
+    '''computes the PMI of matrix X'''
     logging.info("Calculating PMI...")
-    pmi = csr_matrix(counts)
-    logging.info(pmi.shape)
-    logging.info(pmi.getnnz())
-    
-    sum_w = np.array(counts.sum(axis=1))[:, 0]
-    sum_c = np.array(counts.sum(axis=0))[0, :]
+    pmi = csr_matrix(X)
+
+    sum_w = np.array(X.sum(axis=1))[:, 0]
+    sum_c = np.array(X.sum(axis=0))[0, :]
     sum_total = sum_c.sum()
     sum_w = 1/sum_w
     sum_c = 1/sum_c
@@ -52,60 +47,53 @@ def calc_pmi(counts):
     normL.setdiag(sum_w)
     normR = dok_matrix((len(sum_c), len(sum_c)))
     normR.setdiag(sum_c)
-    
+
     pmi = normL.tocsr().dot(pmi).dot(normR.tocsr()) * sum_total
     pmi.data = np.log(pmi.data)
     return pmi
 
-def randwalk(counts):
-    logging.info("Calculating Random walk...")
-    uni = np.array(counts.sum(axis=1))[:, 0]
+
+def lazyrandwalk(X):
+    uni = np.array(X.sum(axis=1))[:, 0]
     Dinv = dok_matrix((len(uni), len(uni)))
     Dinv.setdiag(1/uni)
-    res = Dinv.dot(counts)
+    R = Dinv.dot(X)
     # make matrix dense.
-    res = res.todense()
-    logging.info("Powering matrix...")
+    R = R.todense()
+    logging.info("Computing LRW matrix...")
     start = time.time()
-    res = WEIGHTS[0] * res + WEIGHTS[1] * (res ** 2) + WEIGHTS[2] * (res**3)
+    # TODO: figure out numwords issue.
+    R = ALPHA * R  + (1-ALPHA) * (R ** 2)
     end = time.time()
     logging.info("Time taken {}".format(end-start))
     # convert back to p(w,w') matrix.
     D = dok_matrix((len(uni), len(uni)))
     D.setdiag(uni)
-    return D.dot(res)
+    return D.dot(R)
 
-def squaring_fun(counts):
-    counts = counts.todense()
-    beta = 3446
-    logging.info("Lets have fun squares")
-    logging.info(counts[-beta:,-beta:].shape)
-    counts[-beta:,-beta:] = counts[-beta:,-beta:] ** 2
-    logging.info("this squaring is done...")
-    return counts
 
-#-----
-# write to file so we can use glove eval code.
 def write_to_glove_format(u):
-    id2word = pickle.load(open(ID2WORD_FILE, "rb"))
-    with open(VECTEXT_FILE, "w") as f:
+    with open(VOCAB_FILE, 'r') as f:
+        words = [x.rstrip().split(' ')[0] for x in f.readlines()]
+    with open(VECTORS_FILE, "w") as f:
         for i in range(u.shape[0]):
-            word = id2word[i]
-            f.write(word + " " + " ".join(["%.6f" % (x) for x in u[i,:]]) + "\n")
+            word = words[i]
+            f.write(word + " " + " ".join(["%.8f" % (x)
+                                           for x in u[i, :]]) + "\n")
+
 
 def main():
     logging.info("loading matrix...")
-    X = load_npz(COMAT_FILE)
+    X = load_npz(MATRIX_FILE)
     # convert to probability matrix
     X.data = X.data/X.sum()
-    X = X[:NUM_WORDS, :NUM_WORDS]
-    logging.info(X.shape)
+    # TODO: figure out the numwords issue.
+    # X = X[:NUM_WORDS, :NUM_WORDS]
+    logging.info("Dim of matrix X: {}".format(X.shape))
     # Apply preprocessing steps to X.
     # X = truncate(X)
-    X = randwalk(X)
-    # X = squaring_fun(X)
-    XPMI = calc_pmi(X)
-
+    X = lazyrandwalk(X)
+    XPMI = calculate_pmi(X)
     # Compute unweighted SVD on PMI matrix.
     start = time.time()
     logging.info("Calculating SVD...")
@@ -114,11 +102,8 @@ def main():
     logging.info("SVD took {} s".format(end-start))
 
     # Save the embeddings.
-    np.save("vectors/{}.u.npy".format(DATASET), u)
-    np.save("vectors/{}.s.npy".format(DATASET), s)
-    np.save("vectors/{}.vt.npy".format(DATASET), vt)
     write_to_glove_format(u)
+
 
 if __name__ == "__main__":
     main()
-

@@ -33,4 +33,6 @@ rm enwiki-latest-pages-articles.xml.bz2
 rm enwiki-latest-pages-articles.xml
 ```
 
-Run on text8 example.
+Preprocess the data by running ``src/preprocess.sh``
+
+Compute embeddings with ``src/lazy.sh``
