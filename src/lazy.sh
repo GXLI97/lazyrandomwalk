@@ -19,7 +19,6 @@ python3 src/svd.py \
     --num_words $NUM_WORDS \
     --alpha $ALPHA
 
-
 cd GloVe
 
 python3 ./eval/python/evaluate.py \
