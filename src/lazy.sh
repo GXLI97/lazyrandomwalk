@@ -11,13 +11,6 @@ DIM=50
 NUM_WORDS=1000
 ALPHA=0.8
 
-# read in the vocab file
-# read in the matrix file.
-
-# 1) compute PMI eval without LRW
-# 2) compute PMI eval with LRW
-# 3) compute GloVe eval on same dataset.
-
 python3 src/svd.py \
     --vocab_file $VOCAB_FILE \
     --matrix_file $MATRIX_FILE \
@@ -25,6 +18,7 @@ python3 src/svd.py \
     --dim $DIM \
     --num_words $NUM_WORDS \
     --alpha $ALPHA
+
 
 cd GloVe
 
