@@ -5,5 +5,4 @@
 *.ipynb
 /.ipyndb_checkpoints
 /.vscode
-/notebook
 /plots
