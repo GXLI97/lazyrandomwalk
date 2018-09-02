@@ -7,5 +7,7 @@
 #SBATCH -o logs/lazy.out # stdout is redirected to that file
 #SBATCH -e logs/lazy.err # stderr is redirected to that file
 
+
 module load anaconda3
+pwd
 src/lazy.sh
