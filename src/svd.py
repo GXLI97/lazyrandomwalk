@@ -6,6 +6,7 @@ import time
 import pickle
 import logging
 import argparse
+from sklearn.utils.extmath import randomized_svd
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--vocab_file', type=str)
@@ -35,21 +36,39 @@ def truncate(X, xmax):
 def calculate_pmi(X):
     '''computes the PMI of matrix X'''
     logging.info("Calculating PMI...")
-    pmi = csr_matrix(X)
-
+    # pmi = csr_matrix(X)
+    start = time.time()
+    pmi = X
     sum_w = np.array(X.sum(axis=1))[:, 0]
-    sum_c = np.array(X.sum(axis=0))[0, :]
-    sum_total = sum_c.sum()
+    # sum_c = np.array(X.sum(axis=0))[0, :]
+    sum_total = sum_w.sum()
     sum_w = 1/sum_w
-    sum_c = 1/sum_c
+    # print(sum_w)
+    sum_w = np.diag(sum_w)
+    # sum_c = 1/sum_c
 
-    normL = dok_matrix((len(sum_w), len(sum_w)))
-    normL.setdiag(sum_w)
-    normR = dok_matrix((len(sum_c), len(sum_c)))
-    normR.setdiag(sum_c)
+    # normL = dok_matrix((len(sum_w), len(sum_w)))
+    # normL.setdiag(sum_w)
+    # normR = dok_matrix((len(sum_c), len(sum_c)))
+    # normR.setdiag(sum_c)
 
-    pmi = normL.tocsr().dot(pmi).dot(normR.tocsr()) * sum_total
-    pmi.data = np.log(pmi.data)
+    # norm = dok_matrix((len(sum_w), len(sum_w)))
+    # norm.setdiag(sum_w)
+
+    pmi = np.ma.log(sum_w * pmi * sum_w * sum_total)
+    pmi = pmi.filled(0)
+    # pmi = pmi * sum_w
+    # print(pmi.shape)
+    end = time.time()
+    logging.info("PMI took {} s".format(end-start))
+    # pmi = norm.tocsr().dot(pmi)
+    # print('two')
+    # pmi = pmi.dot(norm.tocsr())
+    # print('three')
+    # pmi *= sum_total
+    # print("four")
+    # pmi = normL.tocsr().dot(pmi).dot(normR.tocsr()) * sum_total
+    # pmi.data = np.log(pmi.data)
     return pmi
 
 
@@ -58,22 +77,25 @@ def lazyrandwalk(X):
     if ALPHA == 1.0:
         return X
     uni = np.array(X.sum(axis=1))[:, 0]
-    Dinv = dok_matrix((len(uni), len(uni)))
-    Dinv.setdiag(1/uni)
-    R = Dinv.dot(X)
+    # Dinv = dok_matrix((len(uni), len(uni)))
+    # Dinv.setdiag(1/uni)
+    Dinv = np.diag(1/uni)
+    R = Dinv * X
     # make matrix dense.
-    R = R.todense()
+    # R = R.todense()
     logging.info("Computing LRW matrix with alpha={}".format(ALPHA))
     start = time.time()
     # TODO: figure out numwords issue.
     # TODO: try the approximation to reduce size of matrix.
-    R = ALPHA * R  + (1-ALPHA) * (R ** 2)
+    R = ALPHA * R + (1-ALPHA) * (R ** 2)
+    # convert back to p(w,w') matrix.
+    # D = dok_matrix((len(uni), len(uni)))
+    # D.setdiag(uni)
+    D = np.diag(uni)
     end = time.time()
     logging.info("Time taken {}".format(end-start))
-    # convert back to p(w,w') matrix.
-    D = dok_matrix((len(uni), len(uni)))
-    D.setdiag(uni)
-    return D.dot(R)
+    return D*R
+    # return D.dot(R)
 
 
 def write_to_glove_format(u):
@@ -91,6 +113,9 @@ def main():
     X = load_npz(MATRIX_FILE)
     # convert to probability matrix
     X.data = X.data/X.sum()
+
+    X = X.todense()
+
     # TODO: figure out the numwords issue.
     # X = X[:NUM_WORDS, :NUM_WORDS]
     logging.info("Dim of matrix X: {}".format(X.shape))
@@ -101,7 +126,8 @@ def main():
     # Compute unweighted SVD on PMI matrix.
     start = time.time()
     logging.info("Calculating SVD...")
-    u, s, vt = svds(XPMI.tocsc(), k=DIM)
+    # u, s, vt = svds(csc_matrix(X), k=DIM)
+    u, s, v = randomized_svd(XPMI, n_components=DIM)
     end = time.time()
     logging.info("SVD took {} s".format(end-start))
 
