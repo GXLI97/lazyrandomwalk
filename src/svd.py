@@ -54,6 +54,7 @@ def calculate_pmi(X):
 
 
 def lazyrandwalk(X):
+    ''' compute the lazy random walk operator'''
     if ALPHA == 1.0:
         return X
     uni = np.array(X.sum(axis=1))[:, 0]
@@ -65,6 +66,7 @@ def lazyrandwalk(X):
     logging.info("Computing LRW matrix with alpha={}".format(ALPHA))
     start = time.time()
     # TODO: figure out numwords issue.
+    # TODO: try the approximation to reduce size of matrix.
     R = ALPHA * R  + (1-ALPHA) * (R ** 2)
     end = time.time()
     logging.info("Time taken {}".format(end-start))
