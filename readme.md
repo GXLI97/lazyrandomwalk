@@ -32,6 +32,6 @@ perl ../src/wiki_preprocess.pl enwiki-latest-pages-articles.xml > wikipedia
 rm enwiki-latest-pages-articles.xml
 ```
 
-Preprocess the data by running ``src/preprocess.sh``
+Preprocess the data by running ``src/preprocess.sh``. You may need to set the env var to point to the right data directory/files.
 
 Compute embeddings with ``src/lazy.sh``
