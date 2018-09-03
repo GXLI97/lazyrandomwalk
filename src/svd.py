@@ -77,9 +77,11 @@ def lazyrandwalk(X):
     if ALPHA == 1.0:
         return X
     uni = np.array(X.sum(axis=1))[:, 0]
+    
     # Dinv = dok_matrix((len(uni), len(uni)))
     # Dinv.setdiag(1/uni)
     Dinv = np.diag(1/uni)
+    # R = np.multiply(Dinv[:,None], X)
     R = Dinv * X
     # make matrix dense.
     # R = R.todense()
@@ -94,6 +96,7 @@ def lazyrandwalk(X):
     D = np.diag(uni)
     end = time.time()
     logging.info("Time taken {}".format(end-start))
+    # return np.multiply(D[:,None], R)
     return D*R
     # return D.dot(R)
 
