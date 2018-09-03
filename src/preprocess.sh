@@ -28,7 +28,7 @@ MATRIX_FILE=${DATA_DIR}/${CORPUS}.matrix.npz
 
 WINDOW_SIZE=10
 MIN_COUNT=1000
-MEMORY=16
+MEMORY=128
 
 $GLOVE_BUILD_DIR/vocab_count -verbose 2 -min-count $MIN_COUNT < $CORPUS_FILE > $VOCAB_FILE
 $GLOVE_BUILD_DIR/cooccur -verbose 2 -symmetric 1 -window-size $WINDOW_SIZE -vocab-file $VOCAB_FILE -memory $MEMORY -distance-weighting 0 < $CORPUS_FILE > $COOCCURRENCE_FILE
