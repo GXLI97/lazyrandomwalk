@@ -41,3 +41,4 @@ INFO:root:WRITING TO NPZ MATRIX
 INFO:root:Started reading vocab file /scratch/network/gxli/data/wikipedia.vocab.txt
 INFO:root:Number of words in vocabulary: 79660
 INFO:root:Building cooccurrence matrix from /scratch/network/gxli/data/wikipedia.cooccurrence.bin
+INFO:root:Saving matrix to /scratch/network/gxli/data/wikipedia.matrix.npz
