@@ -17,8 +17,8 @@ $GLOVE_BUILD_DIR/cooccur -verbose 2 -symmetric 1 -window-size $WINDOW_SIZE -voca
 python3 src/matrix.py --vocab_file $VOCAB_FILE --cooccurrence_file $COOCCURRENCE_FILE --matrix_file $MATRIX_FILE
 
 CORPUS=wikipedia
-DATA_DIR=data
-VECTOR_DIR=vectors
+DATA_DIR=/scratch/network/gxli/data
+VECTOR_DIR=/scratch/network/gxli/vectors
 GLOVE_BUILD_DIR=GloVe/build
 
 CORPUS_FILE=${DATA_DIR}/${CORPUS}
