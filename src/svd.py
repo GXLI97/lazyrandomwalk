@@ -54,6 +54,8 @@ def calculate_pmi(X):
 
 
 def lazyrandwalk(X):
+    if ALPHA == 1.0:
+        return X
     uni = np.array(X.sum(axis=1))[:, 0]
     Dinv = dok_matrix((len(uni), len(uni)))
     Dinv.setdiag(1/uni)
