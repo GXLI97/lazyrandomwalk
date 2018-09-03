@@ -62,7 +62,7 @@ def lazyrandwalk(X):
     R = Dinv.dot(X)
     # make matrix dense.
     R = R.todense()
-    logging.info("Computing LRW matrix...")
+    logging.info("Computing LRW matrix with alpha={}".format(ALPHA))
     start = time.time()
     # TODO: figure out numwords issue.
     R = ALPHA * R  + (1-ALPHA) * (R ** 2)
@@ -85,7 +85,7 @@ def write_to_glove_format(u):
 
 
 def main():
-    logging.info("loading matrix...")
+    logging.info("loading matrix from {}".format(MATRIX_FILE))
     X = load_npz(MATRIX_FILE)
     # convert to probability matrix
     X.data = X.data/X.sum()
