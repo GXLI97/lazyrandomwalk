@@ -87,10 +87,9 @@ def main():
     logging.info("Dim of matrix X: {}".format(X.shape))
     logging.info("Number of nnz in original matrix: {}".format(X.nnz))
     # convert to probability matrix
-    # TODO: below was commented out for numerical stability purposes.
-    X.data = X.data/X.sum() 
     # TODO: play with this.
     X = truncate(X, xmax=100)
+    X.data = X.data/X.sum() 
     logging.info(X[:5,:5])
     X = X.todense()
     
