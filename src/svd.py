@@ -83,6 +83,7 @@ def lazyrandwalk(X):
     # TODO: check for 0 elements in the D array.
     Dinv = 1/D
     logging.info(D[18107])
+    logging.info(Dinv[18107])
     logging.info("Dinv=NaN: {}".format(np.where(np.isnan(Dinv))[0]))
     R = np.multiply(Dinv, X.T).T
     # R = np.diag(Dinv)*X
