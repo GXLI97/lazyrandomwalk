@@ -122,6 +122,7 @@ def main():
     logging.info("loading matrix from {}".format(MATRIX_FILE))
     X = load_npz(MATRIX_FILE)
     # convert to probability matrix
+    # TODO: below was commented out for numerical stability purposes.
     # X.data = X.data/X.sum()
 
     X = X.todense()
