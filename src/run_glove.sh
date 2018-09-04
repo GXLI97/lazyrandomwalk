@@ -34,5 +34,5 @@ $GLOVE_BUILD_DIR/glove \
 cd GloVe
 
 python3 ./eval/python/evaluate.py \
-    --vocab_file ../$VOCAB_FILE \
-    --vectors_file ../$VECTORS_FILE.txt
+    --vocab_file $VOCAB_FILE \
+    --vectors_file $VECTORS_FILE.txt
