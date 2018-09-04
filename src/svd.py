@@ -39,10 +39,10 @@ def calculate_pmi(X):
     # pmi = csr_matrix(X)
     start = time.time()
     pmi = X
-    sum_w = np.array(X.sum(axis=1))[:, 0]
+    D = np.array(X.sum(axis=1))[:, 0]
     # sum_c = np.array(X.sum(axis=0))[0, :]
-    sum_total = sum_w.sum()
-    sum_w = 1/sum_w
+    sum_total = D.sum()
+    Dinv = 1/D
     # print(sum_w)
     # sum_w = np.diag(sum_w)
     # sum_c = 1/sum_c
@@ -54,8 +54,8 @@ def calculate_pmi(X):
 
     # norm = dok_matrix((len(sum_w), len(sum_w)))
     # norm.setdiag(sum_w)
-    pmi = np.multiply(sum_w, pmi.T).T
-    pmi = np.multiply(pmi, sum_w)
+    pmi = np.multiply(Dinv, pmi.T).T
+    pmi = np.multiply(pmi, Dinv)
     pmi *= sum_total
     pmi = np.ma.log(pmi)
     pmi = pmi.filled(0)
@@ -82,9 +82,9 @@ def lazyrandwalk(X):
     logging.info("D=0: {}".format(np.where(D == 0)[0]))
     # TODO: check for 0 elements in the D array.
     Dinv = 1/D
+    Dinv[np.where(D == 0)[0]] = 0
     logging.info(D[18107])
     logging.info(Dinv[18107])
-    logging.info("Dinv=NaN: {}".format(np.where(np.isnan(Dinv))[0]))
     R = np.multiply(Dinv, X.T).T
     # R = np.diag(Dinv)*X
     # uni = np.array(X.sum(axis=1))
