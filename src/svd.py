@@ -90,7 +90,7 @@ def main():
     # TODO: below was commented out for numerical stability purposes.
     X.data = X.data/X.sum() 
     # TODO: play with this.
-    X = truncate(X, xmax=100)
+    # X = truncate(X, xmax=100)
     X = X.todense()
     
     
