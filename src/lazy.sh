@@ -1,18 +1,18 @@
-# CORPUS=text8
-# DATA_DIR=data
-# VECTOR_DIR=vectors
-# GLOVE_BUILD_DIR=GloVe/build
-
-CORPUS=wikipedia
-DATA_DIR=/scratch/network/gxli/data
-VECTOR_DIR=/scratch/network/gxli/vectors
+CORPUS=text8
+DATA_DIR=data
+VECTOR_DIR=vectors
 GLOVE_BUILD_DIR=GloVe/build
+
+# CORPUS=wikipedia
+# DATA_DIR=/scratch/network/gxli/data
+# VECTOR_DIR=/scratch/network/gxli/vectors
+# GLOVE_BUILD_DIR=GloVe/build
 
 VOCAB_FILE=${DATA_DIR}/${CORPUS}.vocab.txt
 MATRIX_FILE=${DATA_DIR}/${CORPUS}.matrix.npz
 VECTORS_FILE=${VECTOR_DIR}/${CORPUS}.vectors.txt
 
-DIM=500
+DIM=50
 NUM_WORDS=1000
 ALPHA=0.8
 

@@ -44,7 +44,7 @@ def calculate_pmi(X):
     sum_total = sum_w.sum()
     sum_w = 1/sum_w
     # print(sum_w)
-    sum_w = np.diag(sum_w)
+    # sum_w = np.diag(sum_w)
     # sum_c = 1/sum_c
 
     # normL = dok_matrix((len(sum_w), len(sum_w)))
@@ -54,8 +54,10 @@ def calculate_pmi(X):
 
     # norm = dok_matrix((len(sum_w), len(sum_w)))
     # norm.setdiag(sum_w)
-
-    pmi = np.ma.log(sum_w * pmi * sum_w * sum_total)
+    pmi = np.multiply(sum_w, pmi.T).T
+    pmi = np.multiply(pmi, sum_w)
+    pmi *= sum_total
+    pmi = np.ma.log(pmi)
     pmi = pmi.filled(0)
     # pmi = pmi * sum_w
     # print(pmi.shape)
@@ -76,13 +78,18 @@ def lazyrandwalk(X):
     ''' compute the lazy random walk operator'''
     if ALPHA == 1.0:
         return X
-    uni = np.array(X.sum(axis=1))[:, 0]
-    
+    D = np.array(X.sum(axis=1))[:,0]
+    Dinv = 1/D
+    R = np.multiply(Dinv, X.T).T
+    # R = np.diag(Dinv)*X
+    # uni = np.array(X.sum(axis=1))
     # Dinv = dok_matrix((len(uni), len(uni)))
     # Dinv.setdiag(1/uni)
-    Dinv = np.diag(1/uni)
-    # R = np.multiply(Dinv[:,None], X)
-    R = Dinv * X
+    # Dinv = np.diag(1/uni)[:,None]
+    # print(Dinv)
+    # print(uni[:,None])
+    # R = np.multiply(1/uni, X)
+    # R = Dinv * X
     # make matrix dense.
     # R = R.todense()
     logging.info("Computing LRW matrix with alpha={}".format(ALPHA))
@@ -93,11 +100,11 @@ def lazyrandwalk(X):
     # convert back to p(w,w') matrix.
     # D = dok_matrix((len(uni), len(uni)))
     # D.setdiag(uni)
-    D = np.diag(uni)
+    # D = np.diag(uni)
     end = time.time()
     logging.info("Time taken {}".format(end-start))
-    # return np.multiply(D[:,None], R)
-    return D*R
+    return np.multiply(D, R.T).T
+    # return np.diag(D)*R
     # return D.dot(R)
 
 
@@ -129,7 +136,7 @@ def main():
     # Compute unweighted SVD on PMI matrix.
     start = time.time()
     logging.info("Calculating SVD...")
-    # u, s, vt = svds(csc_matrix(X), k=DIM)
+    # u, s, vt = svds(csc_matrix(XPMI), k=DIM)
     u, s, v = randomized_svd(XPMI, n_components=DIM)
     end = time.time()
     logging.info("SVD took {} s".format(end-start))
