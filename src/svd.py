@@ -81,14 +81,14 @@ def write_to_glove_format(u):
 def main():
     logging.info("loading matrix from {}".format(MATRIX_FILE))
     X = load_npz(MATRIX_FILE)
-    logging.info("Number of nnz in original matrix: {}".format(X.nnz))
-    # convert to probability matrix
-    # TODO: below was commented out for numerical stability purposes.
-    X.data = X.data/X.sum()
-    X = X.todense()
     logging.info("First 5 submatrix...")
     logging.info(X[:5,:5])
     logging.info("Dim of matrix X: {}".format(X.shape))
+    logging.info("Number of nnz in original matrix: {}".format(X.nnz))
+    # convert to probability matrix
+    # TODO: below was commented out for numerical stability purposes.
+    X.data = X.data/X.sum() 
+    X = X.todense()
     # TODO: play with this.
     # X = truncate(X)
     X = lazyrandwalk(X)

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -N 1  # 1 node
 #SBATCH -n 1  # 1 task per node
-#SBATCH -c 8
+#SBATCH -c 16
 #SBATCH -t 1:00:00 # time required, here it is 1 min
 #SBATCH --mem=250G
 #SBATCH -o logs/lazy.out # stdout is redirected to that file
