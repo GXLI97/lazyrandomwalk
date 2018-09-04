@@ -1,6 +1,6 @@
 # CORPUS=text8
-# DATA_DIR=data
-# VECTOR_DIR=vectors
+# DATA_DIR=~/lazyrandomwalk/data
+# VECTOR_DIR=~/lazyrandomwalk/vectors
 # GLOVE_BUILD_DIR=GloVe/build
 
 CORPUS=wikipedia
@@ -27,5 +27,5 @@ python3 src/svd.py \
 cd GloVe
 
 python3 ./eval/python/evaluate.py \
-    --vocab_file ../$VOCAB_FILE \
-    --vectors_file ../$VECTORS_FILE
+    --vocab_file $VOCAB_FILE \
+    --vectors_file $VECTORS_FILE

@@ -55,6 +55,7 @@ def calculate_pmi(X):
 
     # norm = dok_matrix((len(sum_w), len(sum_w)))
     # norm.setdiag(sum_w)
+    # broadcasting is much much faster than matrix mult.
     pmi = np.multiply(Dinv, pmi.T).T
     pmi = np.multiply(pmi, Dinv)
     pmi *= sum_total
@@ -86,6 +87,7 @@ def lazyrandwalk(X):
     Dinv[np.where(D == 0)[0]] = 0
     logging.info(D[18107])
     logging.info(Dinv[18107])
+    # broadcasting is much much faster than matrix mult.
     R = np.multiply(Dinv, X.T).T
     # R = np.diag(Dinv)*X
     # uni = np.array(X.sum(axis=1))
@@ -109,6 +111,7 @@ def lazyrandwalk(X):
     # D = np.diag(uni)
     end = time.time()
     logging.info("Time taken {}".format(end-start))
+    # broadcasting is much much faster than matrix mult.
     return np.multiply(D, R.T).T
     # return np.diag(D)*R
     # return D.dot(R)
