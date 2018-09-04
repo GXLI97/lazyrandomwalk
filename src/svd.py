@@ -79,9 +79,10 @@ def lazyrandwalk(X):
     if ALPHA == 1.0:
         return X
     D = np.array(X.sum(axis=1))[:,0]
-    logging.info("Sanity check for 0 elements in D {}".format(np.where(D == 0)[0]))
+    logging.info("D=0: {}".format(np.where(D == 0)[0]))
     # TODO: check for 0 elements in the D array.
     Dinv = 1/D
+    logging.info("Dinv=NaN: {}".format(np.where(np.isnan(Dinv))[0]))
     R = np.multiply(Dinv, X.T).T
     # R = np.diag(Dinv)*X
     # uni = np.array(X.sum(axis=1))
