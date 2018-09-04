@@ -128,7 +128,7 @@ def main():
     # X.data = X.data/X.sum()
 
     X = X.todense()
-
+    logging.info(X[:5,:5])
     # TODO: figure out the numwords issue.
     # X = X[:NUM_WORDS, :NUM_WORDS]
     logging.info("Dim of matrix X: {}".format(X.shape))
