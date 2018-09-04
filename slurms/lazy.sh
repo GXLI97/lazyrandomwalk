@@ -2,8 +2,8 @@
 #SBATCH -N 1  # 1 node
 #SBATCH -n 1  # 1 task per node
 #SBATCH -c 8
-#SBATCH -t 4:00:00 # time required, here it is 1 min
-#SBATCH --mem=150G
+#SBATCH -t 8:00:00 # time required, here it is 1 min
+#SBATCH --mem=250G
 #SBATCH -o logs/lazy.out # stdout is redirected to that file
 #SBATCH -e logs/lazy.err # stderr is redirected to that file
 #SBATCH --mail-type=begin
