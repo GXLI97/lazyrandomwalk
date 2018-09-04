@@ -14,7 +14,7 @@ VECTORS_FILE=${VECTOR_DIR}/${CORPUS}.vectors.txt
 
 DIM=500
 NUM_WORDS=1000
-ALPHA=0.73
+ALPHA=0.8
 
 python3 src/svd.py \
     --vocab_file $VOCAB_FILE \
