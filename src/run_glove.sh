@@ -5,7 +5,7 @@ GLOVE_BUILD_DIR=GloVe/build
 
 VOCAB_FILE=${DATA_DIR}/${CORPUS}.vocab.txt
 COOCCURRENCE_FILE=${DATA_DIR}/${CORPUS}.cooccurrence.bin
-COOCCURRENCE_FILE=${DATA_DIR}/${CORPUS}.cooccurrence.bin
+COOCCURRENCE_SHUF_FILE=${DATA_DIR}/${CORPUS}.cooccurrence.shuf.bin
 VECTORS_FILE=${VECTOR_DIR}/${CORPUS}.glove.vectors.txt
 TEMP_FILE=${DATA_DIR}/${CORPUS}.temp_shuffle
 
