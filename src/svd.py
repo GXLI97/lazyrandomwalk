@@ -27,7 +27,8 @@ logging.basicConfig(level=logging.INFO)
 
 def truncate(X, xmax):
     '''if values in X are above xmax, set them to xmax.'''
-    X.data[X.data > xmax] = xmax
+    logging.info("Truncation matrix values above xmax={}".format(xmax))
+    X.data[X.data >= xmax] = xmax
     return X
 
 
