@@ -88,9 +88,11 @@ def main():
     # convert to probability matrix
     # TODO: below was commented out for numerical stability purposes.
     X.data = X.data/X.sum() 
-    X = X.todense()
     # TODO: play with this.
-    # X = truncate(X)
+    X = truncate(X, xmax=100)
+    X = X.todense()
+    
+    
     X = lazyrandwalk(X)
     logging.info("Number of non zero after LRW {}".format(np.count_nonzero(X)))
     XPMI = calculate_pmi(X)
