@@ -13,7 +13,6 @@ MATRIX_FILE=${DATA_DIR}/${CORPUS}.matrix.npz
 VECTORS_FILE=${VECTOR_DIR}/${CORPUS}.vectors.txt
 
 DIM=500
-NUM_WORDS=1000
 ALPHA=0.8
 
 python3 src/svd.py \
@@ -21,7 +20,6 @@ python3 src/svd.py \
     --matrix_file $MATRIX_FILE \
     --vectors_file $VECTORS_FILE \
     --dim $DIM \
-    --num_words $NUM_WORDS \
     --alpha $ALPHA
 
 cd GloVe
