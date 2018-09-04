@@ -26,6 +26,7 @@ $GLOVE_BUILD_DIR/shuffle \
 $GLOVE_BUILD_DIR/glove \
     -verbose 2 \
     -vector-size $DIM \
+    -eta 0.01 \
     -input-file $COOCCURRENCE_SHUF_FILE \
     -vocab-file $VOCAB_FILE \
     -save-file $VECTORS_FILE
