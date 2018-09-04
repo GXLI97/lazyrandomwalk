@@ -43,6 +43,7 @@ def calculate_pmi(X):
     # sum_c = np.array(X.sum(axis=0))[0, :]
     sum_total = D.sum()
     Dinv = 1/D
+    Dinv[np.where(D == 0)[0]] = 0
     # print(sum_w)
     # sum_w = np.diag(sum_w)
     # sum_c = 1/sum_c
