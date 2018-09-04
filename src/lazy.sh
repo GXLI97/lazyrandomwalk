@@ -13,7 +13,7 @@ MATRIX_FILE=${DATA_DIR}/${CORPUS}.matrix.npz
 VECTORS_FILE=${VECTOR_DIR}/${CORPUS}.vectors.txt
 
 DIM=500
-ALPHA=0.8
+ALPHA=.75
 
 python3 src/svd.py \
     --vocab_file $VOCAB_FILE \
