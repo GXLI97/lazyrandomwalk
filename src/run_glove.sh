@@ -15,7 +15,7 @@ VECTORS_FILE=${VECTOR_DIR}/${CORPUS}.glove.vectors
 TEMP_FILE=${DATA_DIR}/${CORPUS}.temp_shuffle
 
 MEMORY=16.0
-DIM=5
+DIM=50
 
 $GLOVE_BUILD_DIR/shuffle \
     -verbose 2 \
