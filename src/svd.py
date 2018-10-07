@@ -104,7 +104,7 @@ def main():
 
     # Save the embeddings.
     write_to_glove_format(u)
-    np.save("/scratch/network/gxli/vectors/u.npy", u)
+    np.save("/scratch/network/gxli/vectors/s.npy", s)
 
 if __name__ == "__main__":
     main()
